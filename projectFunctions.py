@@ -6,7 +6,7 @@ from projectCollections import sqls, stores
 from datetime import timedelta, datetime
 import pandas as pd
 
-f = Faker()
+f = Faker('ru_RU')
 
 date_grid_entity = datetime.now();
 grid_increment_id = '00000000001'
@@ -15,6 +15,11 @@ item_item_id = 2
 
 total_record_inserted = 0
 total_orders_inserted = 0
+
+def GenCoordinate():
+    yCoor = [37,38]
+    chance = [90,10]
+    return '[55.'+str(random.randint(0, 999999))+','+str(random.choices(yCoor,chance)).replace('[', '').replace(']', '') + '.' + str(random.randint(0, 999999))+']'
 
 def ParseSql(sql_items, created_at):
     sql_items_copy = sql_items.copy();
@@ -30,11 +35,12 @@ def ParseSql(sql_items, created_at):
 
     billing_address = f.address()
     customer_email = f.email()
-    customer_first_name = f.first_name()
-    customer_lastname = f.last_name()
+    names = f.name().split(" ")
+    customer_first_name = names[0]#f.first_name()
+    customer_lastname = names[1]#f.last_name()
     customer_name = customer_first_name+' '+customer_lastname
     ip_address = f.ipv4()
-    pickup_location_code = str(f.coordinate())
+    pickup_location_code = GenCoordinate();
     updated_at = created_at + pd.DateOffset(seconds=random.randint(4, 30))
     protection_code = f.uuid4().replace('-','')
 
@@ -79,7 +85,12 @@ def InsertData(cur, sql_item):
     global total_orders_inserted
     total_orders_inserted = total_orders_inserted + 1
     for item in sql_item:
-        cur.execute(sql_item[item])
+        try:            
+            cur.execute(sql_item[item])
+        except Exception as e:
+            print(sql_item[item])
+            print(e)
+            raise
         total_record_inserted = total_record_inserted + 1
 
 
