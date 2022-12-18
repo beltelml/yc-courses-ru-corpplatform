@@ -5,6 +5,7 @@ from faker import Faker
 from projectCollections import sqls, stores
 from datetime import timedelta, datetime
 import pandas as pd
+import os
 
 f = Faker('ru_RU')
 
@@ -16,10 +17,27 @@ item_item_id = 2
 total_record_inserted = 0
 total_orders_inserted = 0
 
+coordinates_list = ['[55.665466,37.544658]']
+coordinate_iterator = 0
+
+COORDINATES_FILE = 'coordinates.txt'
+
 def GenCoordinate():
-    yCoor = [37,38]
-    chance = [90,10]
-    return '[55.'+str(random.randint(0, 999999))+','+str(random.choices(yCoor,chance)).replace('[', '').replace(']', '') + '.' + str(random.randint(0, 999999))+']'
+    global coordinates_list
+    global coordinate_iterator
+    if len(coordinates_list) == 1:
+        coordinates_list.clear()
+        coordinates_file = open(os.path.dirname(os.path.realpath(__file__))+"/"+COORDINATES_FILE, "r")
+        data = coordinates_file.read()
+        coordinates_list = data.split("\n")
+        coordinates_file.close()
+    if (coordinate_iterator == (len(coordinates_list))):
+        coordinate_iterator = 0
+    coordinate = coordinates_list[coordinate_iterator]
+    coordinate_iterator = coordinate_iterator + 1
+    return coordinate
+
+    
 
 def ParseSql(sql_items, created_at):
     sql_items_copy = sql_items.copy();
