@@ -46,7 +46,7 @@ console = Console()
 md = Markdown(WELCOME_SCREEN)
 console.print(md)
 
-default_host_address = '51.250.7.35'
+default_host_address = 'localhost'
 print(' ')
 mysql_host = Prompt.ask("Enter the MySQL Server host address ", default=default_host_address)#str(input('=========== Enter the MySQL Server host address: '))
 LoadData(mysql_host)
@@ -58,10 +58,10 @@ if (datetime.strptime(gen_until_date, "%Y-%m-%d").date() < projectFunctions.date
     exit();
 
 gen_running = True
-default_max_daily_orders_count = 4
+default_max_daily_orders_count = 110
 
 
-max_daily_orders_count = Prompt.ask('Enter the maximum number of orders per day', default=str(default_max_daily_orders_count))
+max_daily_orders_count = Prompt.ask('Enter the maximum number of orders per day', choices=['10', '50', '90', '100', '110'], default=str(default_max_daily_orders_count))
 if (max_daily_orders_count == ''):
     print('Will be used default value => ' + str(default_max_daily_orders_count))
     max_daily_orders_count = default_max_daily_orders_count
