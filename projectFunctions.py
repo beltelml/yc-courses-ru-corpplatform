@@ -98,6 +98,14 @@ def OpenCursor(cnx):
     cur = cnx.cursor()
     return cur
 
+def DeleteData(cur):
+    sql_grid_delete = 'TRUNCATE TABLE sales_order_grid'
+    try:            
+        cur.execute(sql_grid_delete)
+    except Exception as e:            
+        print(e)
+        raise
+
 def InsertData(cur, sql_item):
     global total_record_inserted
     global total_orders_inserted
@@ -113,6 +121,10 @@ def InsertData(cur, sql_item):
 
 
 def CommitData(cnx, cur):
+    cnx.commit()
+    cur.close()
+
+def CommitDataAndClose(cnx, cur):
     cnx.commit()
     cur.close()
     cnx.close()
